@@ -26,7 +26,7 @@ import NearbyCoreAdapter
 ///
 /// - Important: In order to discover another endpoint, the remote endpoint must be advertising
 ///   using the same strategy.
-public enum Strategy {
+@objc public enum Strategy : Int {
   /// No restrictions on the amount of incoming and outgoing connections.
   case cluster
   /// Restricts the discoverer to a single connection, while advertisers have no restrictions on
