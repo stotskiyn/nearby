@@ -18,20 +18,20 @@ import NearbyCoreAdapter
 @objc public class ConnectionManager : NSObject {
 
   /// The delegate object that handles connection-related events.
-  public weak var delegate: ConnectionManagerDelegate?
+  @objc public weak var delegate: ConnectionManagerDelegate?
 
   /// The service identifier to advertise as or search for.
-  public let serviceID: String
+  @objc public let serviceID: String
 
   /// A value indicating the connection strategy and restrictions for advertisement or discovery.
-  public let strategy: Strategy
+  @objc public let strategy: Strategy
 
   /// `DispatchQueue` on which all delegate methods are called.
-  public let queue: DispatchQueue
+  @objc public let queue: DispatchQueue
 
-  private var transfers: [PayloadID: [EndpointID: Progress]] = [:]
+  @objc private var transfers: [PayloadID: [String: Progress]] = [:]
 
-  lazy var payload: InternalPayload? = {
+  @objc lazy var payload: InternalPayload? = {
     let payload = InternalPayload()
     payload.delegate = self
     return payload
@@ -77,15 +77,15 @@ import NearbyCoreAdapter
   ///     `connectionManager(_:didReceiveTransferUpdate:from:forPayload:)`is called when delivery
   ///     succeeds or when an in-flight error occurs.
   /// - Returns: A cancellation token used to cancel the transfer.
-  public func send(
-    _ data: Data, to endpointIDs: [EndpointID], id: PayloadID? = nil,
+  @objc public func send(
+    _ data: Data, to endpointIDs: [String], id: NSNumber? = nil,
     completionHandler: ((Error?) -> Void)? = nil
   )
     -> CancellationToken
   {
     let payload: GNCBytesPayload
     if let id = id {
-      payload = GNCBytesPayload(data: data, identifier: id)
+        payload = GNCBytesPayload(data: data, identifier: id.int64Value)
     } else {
       payload = GNCBytesPayload(data: data)
     }
@@ -118,13 +118,13 @@ import NearbyCoreAdapter
   ///     `connectionManager(_:didReceiveTransferUpdate:from:forPayload:)`is called when delivery
   ///     succeeds or when an in-flight error occurs.
   /// - Returns: A cancellation token used to cancel the transfer.
-  public func startStream(
-    _ stream: InputStream, to endpointIDs: [EndpointID], id: PayloadID? = nil,
+  @objc public func startStream(
+    _ stream: InputStream, to endpointIDs: [String], id: NSNumber? = nil,
     completionHandler: ((Error?) -> Void)? = nil
   ) -> CancellationToken {
     let payload: GNCStreamPayload
     if let id = id {
-      payload = GNCStreamPayload(stream: stream, identifier: id)
+        payload = GNCStreamPayload(stream: stream, identifier: id.int64Value)
     } else {
       payload = GNCStreamPayload(stream: stream)
     }
@@ -159,9 +159,9 @@ import NearbyCoreAdapter
   ///     `connectionManager(_:didReceiveTransferUpdate:from:forPayload:)`is called when delivery
   ///     succeeds or when an in-flight error occurs.
   /// - Returns: A cancellation token used to cancel the transfer.
-  public func sendResource(
-    at resourceURL: URL, withName resourceName: String, to endpointIDs: [EndpointID],
-    id: PayloadID? = nil, completionHandler: ((Error?) -> Void)? = nil
+  @objc public func sendResource(
+    at resourceURL: URL, withName resourceName: String, to endpointIDs: [String],
+    id: NSNumber? = nil, completionHandler: ((Error?) -> Void)? = nil
   ) -> CancellationToken {
     let remotePath = URL(fileURLWithPath: resourceName)
     let parentFolder = remotePath.deletingLastPathComponent().relativePath
@@ -170,7 +170,7 @@ import NearbyCoreAdapter
     let payload: GNCFilePayload
     if let id = id {
       payload = GNCFilePayload(
-        fileURL: resourceURL, parentFolder: parentFolder, fileName: fileName, identifier: id)
+        fileURL: resourceURL, parentFolder: parentFolder, fileName: fileName, identifier: id.int64Value)
     } else {
       payload = GNCFilePayload(fileURL: resourceURL, parentFolder: parentFolder, fileName: fileName)
     }
@@ -178,8 +178,8 @@ import NearbyCoreAdapter
     return send(payload, to: endpointIDs, completionHandler: completionHandler)
   }
 
-  private func send(
-    _ payload: GNCPayload, to endpointIDs: [EndpointID],
+  @objc private func send(
+    _ payload: GNCPayload, to endpointIDs: [String],
     completionHandler: ((Error?) -> Void)? = nil
   ) -> CancellationToken {
     for endpointID in endpointIDs {
@@ -205,7 +205,7 @@ import NearbyCoreAdapter
   ///   - completionHandler: Called with `nil` when the endpoint has been disconnected,
   ///     or an error if disconnecting failed
   public func disconnect(
-    from endpointID: EndpointID,
+    from endpointID: String,
     completionHandler: ((Error?) -> Void)? = nil
   ) {
     GNCCoreAdapter.shared.disconnect(
@@ -217,7 +217,7 @@ import NearbyCoreAdapter
 
 @objc extension ConnectionManager: InternalPayloadDelegate {
 
-  func receivedPayload(_ payload: GNCPayload, fromEndpoint endpointID: String) {
+  @objc func receivedPayload(_ payload: GNCPayload, fromEndpoint endpointID: String) {
     queue.async { [weak self] in
       guard let self = self else { return }
       if self.transfers[payload.identifier] == nil {
@@ -316,7 +316,7 @@ import NearbyCoreAdapter
   ///     nearby endpoint should be trusted, or `false` otherwise.
   func connectionManager(
     _ connectionManager: ConnectionManager, didReceive verificationCode: String,
-    from endpointID: EndpointID, verificationHandler: @escaping (Bool) -> Void)
+    from endpointID: String, verificationHandler: @escaping (Bool) -> Void)
 
   /// Indicates that a `Data` object has been received from a nearby endpoint.
   ///
@@ -327,7 +327,7 @@ import NearbyCoreAdapter
   ///   - endpointID: The endpoint ID of the sender.
   func connectionManager(
     _ connectionManager: ConnectionManager, didReceive data: Data, withID payloadID: PayloadID,
-    from endpointID: EndpointID)
+    from endpointID: String)
 
   /// Called when a nearby endpoint opens a byte stream connection to the local endpoint.
   ///
@@ -341,7 +341,7 @@ import NearbyCoreAdapter
   func connectionManager(
     _ connectionManager: ConnectionManager, didReceive stream: InputStream,
     withID payloadID: PayloadID,
-    from endpointID: EndpointID, cancellationToken token: CancellationToken)
+    from endpointID: String, cancellationToken token: CancellationToken)
 
   /// Indicates that the local endpoint began receiving a resource from a nearby endpoint.
   ///
@@ -354,7 +354,7 @@ import NearbyCoreAdapter
   ///   - token: Token used to cancel the resource transfer.
   func connectionManager(
     _ connectionManager: ConnectionManager, didStartReceivingResourceWithID payloadID: PayloadID,
-    from endpointID: EndpointID, at localURL: URL, withName name: String,
+    from endpointID: String, at localURL: URL, withName name: String,
     cancellationToken token: CancellationToken)
 
   /// Called when a progress update is available for an incoming or outgoing transfer.
@@ -366,7 +366,7 @@ import NearbyCoreAdapter
   ///   - payloadID: The ID of the payload, as provided by the sender.
   func connectionManager(
     _ connectionManager: ConnectionManager, didReceiveTransferUpdate update: TransferUpdate,
-    from endpointID: EndpointID, forPayload payloadID: PayloadID)
+    from endpointID: String, forPayload payloadID: PayloadID)
 
   /// Called when the status of the connection to a nearby endpoint changes.
   ///
@@ -377,14 +377,14 @@ import NearbyCoreAdapter
   ///   - endpointID: The ID of the nearby endpoint whose connection status has changed.
   func connectionManager(
     _ connectionManager: ConnectionManager, didChangeTo state: ConnectionState,
-    for endpointID: EndpointID
+    for endpointID: String
   )
 }
 
 extension ConnectionManagerDelegate {
   public func connectionManager(
     _ connectionManager: ConnectionManager, didReceive verificationCode: String,
-    from endpointID: EndpointID, verificationHandler: @escaping (Bool) -> Void
+    from endpointID: String, verificationHandler: @escaping (Bool) -> Void
   ) {
     verificationHandler(true)
   }

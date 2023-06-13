@@ -76,7 +76,7 @@ import NearbyCoreAdapter
   ///   - completionHandler: Called with `nil`  when the endpoint has been disconnected,
   ///     or an error if disconnecting failed
   public func requestConnection(
-    to endpointID: EndpointID, using context: Data, completionHandler: ((Error?) -> Void)? = nil
+    to endpointID: String, using context: Data, completionHandler: ((Error?) -> Void)? = nil
   ) {
     let options = GNCConnectionOptions()
     GNCCoreAdapter.shared.requestConnection(
@@ -189,7 +189,7 @@ extension Discoverer: InternalDiscoveryDelegate {
   ///   - endpointID: The unique ID of the endpoint that was found.
   ///   - context: An arbitrary piece of data received from the nearby endpoint. This can be used to
   ///     provide further information to the user about the nature of the invitation.
-  func discoverer(_ discoverer: Discoverer, didFind endpointID: EndpointID, with context: Data)
+  func discoverer(_ discoverer: Discoverer, didFind endpointID: String, with context: Data)
 
   /// Called when a nearby endpoint is lost.
   ///
@@ -204,5 +204,5 @@ extension Discoverer: InternalDiscoveryDelegate {
   /// - Parameters:
   ///   - discoverer: The discoverer object that lost the nearby endpoint.
   ///   - endpointID: The unique ID of the nearby endpoint that was lost.
-  func discoverer(_ discoverer: Discoverer, didLose endpointID: EndpointID)
+  func discoverer(_ discoverer: Discoverer, didLose endpointID: String)
 }

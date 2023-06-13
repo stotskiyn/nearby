@@ -174,6 +174,6 @@ import NearbyCoreAdapter
   ///   - connectionRequestHandler: A block that your code must call to indicate whether the
   ///     advertiser should accept or decline the connection request.
   func advertiser(
-    _ advertiser: Advertiser, didReceiveConnectionRequestFrom endpointID: EndpointID,
+    _ advertiser: Advertiser, didReceiveConnectionRequestFrom endpointID: String,
     with context: Data, connectionRequestHandler: @escaping (Bool) -> Void)
 }
