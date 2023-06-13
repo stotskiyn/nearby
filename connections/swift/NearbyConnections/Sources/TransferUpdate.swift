@@ -15,7 +15,7 @@
 import Foundation
 
 /// Indicates the current status of the transfer.
-public enum TransferUpdate {
+@objc public enum TransferUpdate : Int {
   /// The remote endpoint has successfully received the full transfer.
   case success
   /// Either the local or remote endpoint has canceled the transfer.
@@ -23,5 +23,5 @@ public enum TransferUpdate {
   /// The remote endpoint failed to receive the transfer.
   case failure
   /// The the transfer is currently in progress with an associated progress value.
-  case progress(Progress)
+  case progress
 }

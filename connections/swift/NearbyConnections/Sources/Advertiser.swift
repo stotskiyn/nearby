@@ -17,7 +17,7 @@ import NearbyCoreAdapter
 
 /// Publishes an advertisement and notifies its delegate about connection requests from nearby
 /// endpoints.
-public class Advertiser {
+@objc public class Advertiser : NSObject {
 
   /// The delegate object that handles advertising-related events.
   public weak var delegate: AdvertiserDelegate?
@@ -71,7 +71,7 @@ public class Advertiser {
   }
 }
 
-extension Advertiser: InternalConnectionDelegate {
+@objc extension Advertiser: InternalConnectionDelegate {
 
   func connected(
     toEndpoint endpointID: String, withEndpointInfo info: Data, authenticationToken: String
@@ -158,7 +158,7 @@ extension Advertiser: InternalConnectionDelegate {
 ///
 /// Delegate methods are executed on the `.main` queue by default, but a specific `DispatchQueue` on
 /// which to call the delegate methods can be passed to `ConnectionManager`.
-public protocol AdvertiserDelegate: AnyObject {
+@objc public protocol AdvertiserDelegate: AnyObject {
 
   /// Called when a connection request is received from a nearby endpoint.
   ///

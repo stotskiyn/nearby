@@ -15,7 +15,7 @@
 import NearbyCoreAdapter
 
 /// Token used to cancel a transfer.
-public class CancellationToken {
+@objc public class CancellationToken : NSObject {
   internal let payloadID: Int64
 
   internal init(_ payloadID: Int64) {

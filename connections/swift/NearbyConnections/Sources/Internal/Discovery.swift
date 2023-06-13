@@ -14,7 +14,7 @@
 
 import NearbyCoreAdapter
 
-class InternalDiscovery: GNCDiscoveryDelegate {
+@objc class InternalDiscovery: NSObject, GNCDiscoveryDelegate {
   weak var delegate: InternalDiscoveryDelegate?
 
   func foundEndpoint(_ endpointID: String, withEndpointInfo info: Data) {
@@ -26,7 +26,7 @@ class InternalDiscovery: GNCDiscoveryDelegate {
   }
 }
 
-protocol InternalDiscoveryDelegate: AnyObject {
+@objc protocol InternalDiscoveryDelegate: AnyObject {
   func foundEndpoint(_ endpointID: String, withEndpointInfo info: Data)
   func lostEndpoint(_ endpointID: String)
 }

@@ -14,7 +14,7 @@
 
 import NearbyCoreAdapter
 
-class InternalConnection: GNCConnectionDelegate {
+@objc class InternalConnection: NSObject, GNCConnectionDelegate {
   weak var delegate: InternalConnectionDelegate?
 
   func connected(
@@ -42,7 +42,7 @@ class InternalConnection: GNCConnectionDelegate {
   }
 }
 
-protocol InternalConnectionDelegate: AnyObject {
+@objc protocol InternalConnectionDelegate: AnyObject {
   func connected(
     toEndpoint endpointID: String,
     withEndpointInfo info: Data,

@@ -13,13 +13,13 @@
 // limitations under the License.
 
 /// Indicates the current status of the connection between a local and remote endpoint.
-public enum ConnectionState {
-  /// A connection to the remote endpoint is currently being established.
-  case connecting
-  /// The local endpoint is currently connected to the remote endpoint.
-  case connected
-  /// The remote endpoint is no longer connected.
-  case disconnected
-  /// The local or remote endpoint has rejected the connection request.
-  case rejected
+@objc public enum ConnectionState: Int {
+    /// A connection to the remote endpoint is currently being established.
+    case connecting
+    /// The local endpoint is currently connected to the remote endpoint.
+    case connected
+    /// The remote endpoint is no longer connected.
+    case disconnected
+    /// The local or remote endpoint has rejected the connection request.
+    case rejected
 }

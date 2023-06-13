@@ -14,7 +14,7 @@
 
 import NearbyCoreAdapter
 
-class InternalPayload: GNCPayloadDelegate {
+@objc class InternalPayload: NSObject, GNCPayloadDelegate {
   weak var delegate: InternalPayloadDelegate?
 
   func receivedPayload(_ payload: GNCPayload, fromEndpoint endpointID: String) {
@@ -31,7 +31,7 @@ class InternalPayload: GNCPayloadDelegate {
   }
 }
 
-protocol InternalPayloadDelegate: AnyObject {
+@objc protocol InternalPayloadDelegate: AnyObject {
   func receivedPayload(_ payload: GNCPayload, fromEndpoint endpointID: String)
   func receivedProgressUpdate(
     forPayload payloadID: Int64, with status: GNCPayloadStatus, fromEndpoint endpointID: String,

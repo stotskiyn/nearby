@@ -16,7 +16,7 @@ import Foundation
 import NearbyCoreAdapter
 
 /// Searches for nearby endpoints and provides the ability to request connections to them.
-public class Discoverer {
+@objc public class Discoverer : NSObject {
 
   /// The delegate object that handles discovery-related events.
   public weak var delegate: DiscovererDelegate?
@@ -89,7 +89,7 @@ public class Discoverer {
   }
 }
 
-extension Discoverer: InternalConnectionDelegate {
+@objc extension Discoverer: InternalConnectionDelegate {
 
   func connected(
     toEndpoint endpointID: String, withEndpointInfo info: Data, authenticationToken: String
@@ -177,7 +177,7 @@ extension Discoverer: InternalDiscoveryDelegate {
 ///
 /// Delegate methods are executed on the `.main` queue by default, but a specific `DispatchQueue` on
 /// which to call the delegate methods can be passed to `ConnectionManager`.
-public protocol DiscovererDelegate: AnyObject {
+@objc public protocol DiscovererDelegate: AnyObject {
 
   /// Called when a nearby endpoint is found.
   ///

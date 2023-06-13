@@ -15,7 +15,7 @@
 import NearbyCoreAdapter
 
 /// Manages communication between the local endpoint and all remote endpoints connected to it.
-public class ConnectionManager {
+@objc public class ConnectionManager : NSObject {
 
   /// The delegate object that handles connection-related events.
   public weak var delegate: ConnectionManagerDelegate?
@@ -215,7 +215,7 @@ public class ConnectionManager {
   }
 }
 
-extension ConnectionManager: InternalPayloadDelegate {
+@objc extension ConnectionManager: InternalPayloadDelegate {
 
   func receivedPayload(_ payload: GNCPayload, fromEndpoint endpointID: String) {
     queue.async { [weak self] in
@@ -278,7 +278,7 @@ extension ConnectionManager: InternalPayloadDelegate {
           self, didReceiveTransferUpdate: .canceled, from: endpointID, forPayload: payloadID)
       case .inProgress:
         self.delegate?.connectionManager(
-          self, didReceiveTransferUpdate: .progress(progress), from: endpointID,
+          self, didReceiveTransferUpdate: .progress, from: endpointID,
           forPayload: payloadID)
       }
       if self.transfers[payloadID]?.isEmpty ?? false {
@@ -293,7 +293,7 @@ extension ConnectionManager: InternalPayloadDelegate {
 ///
 /// Delegate methods are executed on the `.main` queue by default, but a specific `DispatchQueue` on
 /// which to call the delegate methods can be passed to `ConnectionManager`.
-public protocol ConnectionManagerDelegate: AnyObject {
+@objc public protocol ConnectionManagerDelegate: AnyObject {
 
   /// Called to validate the verification code generated for the pair of endpoints.
   ///
