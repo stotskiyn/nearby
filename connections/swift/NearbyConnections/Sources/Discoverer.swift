@@ -16,7 +16,7 @@ import Foundation
 import NearbyCoreAdapter
 
 /// Searches for nearby endpoints and provides the ability to request connections to them.
-@objc public class Discoverer : NSObject {
+@objcMembers public class Discoverer : NSObject {
 
   /// The delegate object that handles discovery-related events.
   public weak var delegate: DiscovererDelegate?
