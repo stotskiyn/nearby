@@ -15,23 +15,23 @@
 import NearbyCoreAdapter
 
 /// Manages communication between the local endpoint and all remote endpoints connected to it.
-@objc public class ConnectionManager : NSObject {
+@objcMembers public class ConnectionManager : NSObject {
 
   /// The delegate object that handles connection-related events.
-  @objc public weak var delegate: ConnectionManagerDelegate?
+  public weak var delegate: ConnectionManagerDelegate?
 
   /// The service identifier to advertise as or search for.
-  @objc public let serviceID: String
+  public let serviceID: String
 
   /// A value indicating the connection strategy and restrictions for advertisement or discovery.
-  @objc public let strategy: Strategy
+  public let strategy: Strategy
 
   /// `DispatchQueue` on which all delegate methods are called.
-  @objc public let queue: DispatchQueue
+  public let queue: DispatchQueue
 
-  @objc private var transfers: [PayloadID: [String: Progress]] = [:]
+  private var transfers: [PayloadID: [String: Progress]] = [:]
 
-  @objc lazy var payload: InternalPayload? = {
+  lazy var payload: InternalPayload? = {
     let payload = InternalPayload()
     payload.delegate = self
     return payload
@@ -45,7 +45,7 @@ import NearbyCoreAdapter
   ///     uniquely identifies your service. A good default is to use your app’s package name.
   ///   - strategy: Connection strategy to be used during advertisement or discovery.
   ///   - queue: `DispatchQueue` on which all delegate methods are called. `.main` by default.
-  @objc public init(serviceID: String, strategy: Strategy, queue: DispatchQueue = .main) {
+  public init(serviceID: String, strategy: Strategy, queue: DispatchQueue = .main) {
     self.serviceID = serviceID
     self.strategy = strategy
     self.queue = queue
@@ -77,7 +77,7 @@ import NearbyCoreAdapter
   ///     `connectionManager(_:didReceiveTransferUpdate:from:forPayload:)`is called when delivery
   ///     succeeds or when an in-flight error occurs.
   /// - Returns: A cancellation token used to cancel the transfer.
-  @objc public func send(
+  public func send(
     _ data: Data, to endpointIDs: [String], id: NSNumber? = nil,
     completionHandler: ((Error?) -> Void)? = nil
   )
@@ -118,7 +118,7 @@ import NearbyCoreAdapter
   ///     `connectionManager(_:didReceiveTransferUpdate:from:forPayload:)`is called when delivery
   ///     succeeds or when an in-flight error occurs.
   /// - Returns: A cancellation token used to cancel the transfer.
-  @objc public func startStream(
+  public func startStream(
     _ stream: InputStream, to endpointIDs: [String], id: NSNumber? = nil,
     completionHandler: ((Error?) -> Void)? = nil
   ) -> CancellationToken {
@@ -159,7 +159,7 @@ import NearbyCoreAdapter
   ///     `connectionManager(_:didReceiveTransferUpdate:from:forPayload:)`is called when delivery
   ///     succeeds or when an in-flight error occurs.
   /// - Returns: A cancellation token used to cancel the transfer.
-  @objc public func sendResource(
+  public func sendResource(
     at resourceURL: URL, withName resourceName: String, to endpointIDs: [String],
     id: NSNumber? = nil, completionHandler: ((Error?) -> Void)? = nil
   ) -> CancellationToken {
@@ -178,7 +178,7 @@ import NearbyCoreAdapter
     return send(payload, to: endpointIDs, completionHandler: completionHandler)
   }
 
-  @objc private func send(
+  private func send(
     _ payload: GNCPayload, to endpointIDs: [String],
     completionHandler: ((Error?) -> Void)? = nil
   ) -> CancellationToken {
@@ -217,7 +217,7 @@ import NearbyCoreAdapter
 
 @objc extension ConnectionManager: InternalPayloadDelegate {
 
-  @objc func receivedPayload(_ payload: GNCPayload, fromEndpoint endpointID: String) {
+  func receivedPayload(_ payload: GNCPayload, fromEndpoint endpointID: String) {
     queue.async { [weak self] in
       guard let self = self else { return }
       if self.transfers[payload.identifier] == nil {

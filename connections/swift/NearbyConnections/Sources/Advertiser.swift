@@ -17,7 +17,7 @@ import NearbyCoreAdapter
 
 /// Publishes an advertisement and notifies its delegate about connection requests from nearby
 /// endpoints.
-@objc public class Advertiser : NSObject {
+@objcMembers public class Advertiser : NSObject {
 
   /// The delegate object that handles advertising-related events.
   public weak var delegate: AdvertiserDelegate?
